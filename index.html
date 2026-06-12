@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aetheria // Smart Home IoT Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="styles.css?v=2.4">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo-glow"></div>
+                <i class="fa-solid fa-house-laptop logo-icon"></i>
+                <span class="brand-name">Aetheria</span>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#overview" class="menu-item active" data-target="overview-section" id="nav-overview">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#devices" class="menu-item" data-target="devices-section" id="nav-devices">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span>Smart Devices</span>
+                </a>
+                <a href="#automations" class="menu-item" data-target="automations-section" id="nav-automations">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span>Automations</span>
+                </a>
+                <a href="#security" class="menu-item" data-target="security-section" id="nav-security">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Security Hub</span>
+                </a>
+                <a href="#analytics" class="menu-item" data-target="analytics-section" id="nav-analytics">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Energy Grid</span>
+                </a>
+                <a href="#settings" class="menu-item" data-target="settings-section" id="nav-settings">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>System Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User Profile" class="profile-pic">
+                    <div class="user-info">
+                        <span class="user-name">vedika dhengre</span>
+                        <span class="user-status">Host • Home Mode</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="welcome-block">
+                    <h1>Welcome home, Sarah</h1>
+                    <p class="subtitle">System status: <span class="status-badge status-green"><span class="pulse"></span>All systems nominal</span></p>
+                </div>
+
+                <!-- Climate / Time Quick Header Info -->
+                <div class="header-widgets">
+                    <div class="header-weather">
+                        <i class="fa-solid fa-cloud-sun weather-icon"></i>
+                        <div class="weather-text">
+                            <span class="header-val">22°C</span>
+                            <span class="header-lbl">Clear Sky • NY</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-clock">
+                        <i class="fa-solid fa-clock"></i>
+                        <div class="clock-text">
+                            <span class="header-val" id="current-time">12:00:00 PM</span>
+                            <span class="header-lbl" id="current-date">Monday, June 1, 2026</span>
+                        </div>
+                    </div>
+
+                    <div class="notification-bell" id="notification-trigger">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge-count" id="notification-count">0</span>
+                        
+                        <div class="notification-dropdown" id="notification-dropdown">
+                            <div class="dropdown-header">
+                                <h3>Alert Notifications</h3>
+                                <button class="btn-clear-notifications" id="clear-notifications-btn">Clear All</button>
+                            </div>
+                            <div class="dropdown-list" id="notification-list">
+                                <div class="empty-state">No recent activities.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Global Scenes Selector -->
+            <section class="scenes-section">
+                <h3 class="section-title">Quick Ambient Scenes</h3>
+                <div class="scenes-grid">
+                    <button class="scene-card active" id="scene-arrive">
+                        <div class="scene-icon-wrapper"><i class="fa-solid fa-door-open"></i></div>
+                        <div class="scene-details">
+                            <span class="scene-name">Arrive Home</span>
+                            <span class="scene-desc">Comfort & warm lights</span>
+                        </div>
+                    </button>
+                    <button class="scene-card" id="scene-movie">
+                        <div class="scene-icon-wrapper"><i class="fa-solid fa-film"></i></div>
+                        <div class="scene-details">
+                            <span class="scene-name">Movie Night</span>
+                            <span class="scene-desc">Dimmable violet & sound bar</span>
+                        </div>
+                    </button>
+                    <button class="scene-card" id="scene-sleep">
+                        <div class="scene-icon-wrapper"><i class="fa-solid fa-moon"></i></div>
+                        <div class="scene-details">
+                            <span class="scene-name">Deep Sleep</span>
+                            <span class="scene-desc">Secure locks & eco mode</span>
+                        </div>
+                    </button>
+                    <button class="scene-card" id="scene-away">
+                        <div class="scene-icon-wrapper"><i class="fa-solid fa-plane-departure"></i></div>
+                        <div class="scene-details">
+                            <span class="scene-name">Away Mode</span>
+                            <span class="scene-desc">All off & cameras active</span>
+                        </div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Views / Page panels -->
+            <div class="view-viewport">
+
+                <!-- 1. OVERVIEW VIEW -->
+                <section id="overview-section" class="route-panel active">
+                    <!-- Key stats counters -->
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon-container bg-cyan"><i class="fa-solid fa-bolt"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-lbl">Real-time Load</span>
+                                <span class="stat-val" id="stat-power-val">1.2 kW</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-container bg-pink"><i class="fa-solid fa-thermometer"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-lbl">Avg Temperature</span>
+                                <span class="stat-val" id="stat-temp-val">21.5°C</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-container bg-purple"><i class="fa-solid fa-toggle-on"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-lbl">Active Devices</span>
+                                <span class="stat-val" id="stat-active-devices">8 / 12</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-container bg-gold"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-lbl">Alert Warnings</span>
+                                <span class="stat-val text-neon-gold" id="stat-alerts-count">0 Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main grid layout -->
+                    <div class="overview-grid">
+                        <!-- Quick control dashboard center -->
+                        <div class="grid-card wide-card glass-panel">
+                            <div class="card-header">
+                                <h2>Smart Dashboard Controls</h2>
+                                <span class="card-action-text" onclick="document.getElementById('nav-devices').click()">View detailed setup <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                            <div class="overview-quick-controls">
+                                <!-- Fast toggles for key appliances -->
+                                <div class="quick-device-toggle" data-device="living-light">
+                                    <div class="quick-toggle-icon active"><i class="fa-solid fa-lightbulb"></i></div>
+                                    <div class="quick-toggle-details">
+                                        <h4>Living Room Light</h4>
+                                        <span class="sub-label">ON • 80% Brightness</span>
+                                    </div>
+                                    <label class="switch-slide">
+                                        <input type="checkbox" checked id="toggle-living-light">
+                                        <span class="switch-slider-round"></span>
+                                    </label>
+                                </div>
+                                <div class="quick-device-toggle" data-device="living-ac">
+                                    <div class="quick-toggle-icon active"><i class="fa-solid fa-snowflake"></i></div>
+                                    <div class="quick-toggle-details">
+                                        <h4>Smart AC Thermostat</h4>
+                                        <span class="sub-label">ON • Cooling at 21°C</span>
+                                    </div>
+                                    <label class="switch-slide">
+                                        <input type="checkbox" checked id="toggle-living-ac">
+                                        <span class="switch-slider-round"></span>
+                                    </label>
+                                </div>
+                                <div class="quick-device-toggle" data-device="front-lock">
+                                    <div class="quick-toggle-icon active-secure"><i class="fa-solid fa-lock"></i></div>
+                                    <div class="quick-toggle-details">
+                                        <h4>Front Door Lock</h4>
+                                        <span class="sub-label text-neon-teal">SECURELY LOCKED</span>
+                                    </div>
+                                    <label class="switch-slide">
+                                        <input type="checkbox" checked id="toggle-front-lock">
+                                        <span class="switch-slider-round"></span>
+                                    </label>
+                                </div>
+                                <div class="quick-device-toggle" data-device="media-sound">
+                                    <div class="quick-toggle-icon active"><i class="fa-solid fa-music"></i></div>
+                                    <div class="quick-toggle-details">
+                                        <h4>Smart Sound System</h4>
+                                        <span class="sub-label">PLAYING • "Midnight City"</span>
+                                    </div>
+                                    <label class="switch-slide">
+                                        <input type="checkbox" checked id="toggle-media-sound">
+                                        <span class="switch-slider-round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Energy grid -->
+                        <div class="grid-card glass-panel">
+                            <div class="card-header">
+                                <h2>Hourly Usage Load</h2>
+                                <span class="card-sub-header">Live consumption (Watts)</span>
+                            </div>
+                            <div class="chart-container mini-chart">
+                                <canvas id="miniEnergyChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Mini Security Camera feed -->
+                        <div class="grid-card glass-panel">
+                            <div class="card-header">
+                                <h2>Security Feed • Driveway</h2>
+                                <span class="live-indicator"><span class="pulse red-pulse"></span>LIVE</span>
+                            </div>
+                            <div class="mini-cam-feed">
+                                <canvas id="miniCameraFeed" class="cam-canvas"></canvas>
+                                <div class="cam-overlay">
+                                    <span class="cam-name">CAM_01 // DRIVEWAY</span>
+                                    <span class="cam-timestamp" id="cam-time">12:00:00 PM</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vacuum cleaner route control -->
+                        <div class="grid-card glass-panel">
+                            <div class="card-header">
+                                <h2>Robo-Vacuum</h2>
+                                <span class="status-text text-neon-teal" id="mini-vacuum-status">Docked • Charging</span>
+                            </div>
+                            <div class="mini-vacuum-content">
+                                <div class="vacuum-map-container">
+                                    <!-- A decorative circular layout showcasing cleaner routing path -->
+                                    <div class="vacuum-map-grid" id="vacuum-canvas-area">
+                                        <div class="vacuum-radar"></div>
+                                        <div class="vacuum-cleaner" id="vacuum-pointer" style="left: 50%; top: 50%;"></div>
+                                        <div class="vacuum-home-dock" style="left: 50%; top: 50%;"><i class="fa-solid fa-charging-station"></i></div>
+                                    </div>
+                                </div>
+                                <div class="vacuum-controls">
+                                    <button class="btn-primary-glow btn-sm" id="btn-vacuum-start"><i class="fa-solid fa-play"></i> Clean</button>
+                                    <button class="btn-sec btn-sm" id="btn-vacuum-dock"><i class="fa-solid fa-home"></i> Dock</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. SMART DEVICES VIEW -->
+                <section id="devices-section" class="route-panel">
+                    <!-- Filters and room selections -->
+                    <div class="filter-bar">
+                        <div class="tabs">
+                            <button class="tab-btn active" data-room="all">All Rooms</button>
+                            <button class="tab-btn" data-room="living">Living Room</button>
+                            <button class="tab-btn" data-room="kitchen">Kitchen</button>
+                            <button class="tab-btn" data-room="bedroom">Bedroom</button>
+                            <button class="tab-btn" data-room="backyard">Backyard</button>
+                        </div>
+                    </div>
+
+                    <!-- Room Detailed Cards Grid -->
+                    <div class="devices-grid">
+                        
+                        <!-- Light control Widget -->
+                        <div class="device-detail-card glass-panel" data-room="living">
+                            <div class="card-glow-element" id="light-glow-color"></div>
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-light-icon-box">
+                                    <i class="fa-solid fa-lightbulb"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>Living Room Light</h3>
+                                    <span class="device-loc">Living Room</span>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" checked id="widget-light-toggle">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="device-controls-area" id="widget-light-controls">
+                                <!-- Brightness slider -->
+                                <div class="control-group">
+                                    <div class="control-label">
+                                        <span>Brightness</span>
+                                        <span id="light-bright-val">80%</span>
+                                    </div>
+                                    <div class="slider-wrapper">
+                                        <i class="fa-regular fa-sun slider-icon-min"></i>
+                                        <input type="range" min="10" max="100" value="80" class="gradient-slider" id="widget-light-brightness">
+                                        <i class="fa-solid fa-sun slider-icon-max"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Ambient Hue Color Selection picker -->
+                                <div class="control-group">
+                                    <span class="control-label">Color Profile</span>
+                                    <div class="color-palette-presets">
+                                        <button class="color-dot color-warm active" data-color="#ffb366" title="Warm Sunset"></button>
+                                        <button class="color-dot color-teal" data-color="#00f2fe" title="Cool Ice"></button>
+                                        <button class="color-dot color-purple" data-color="#a18cd1" title="Neon Amethyst"></button>
+                                        <button class="color-dot color-coral" data-color="#ff6b6b" title="Vibrant Coral"></button>
+                                        <button class="color-dot color-custom" id="custom-color-trigger" title="Custom Palette">
+                                            <input type="color" id="light-color-input" value="#ffb366">
+                                            <i class="fa-solid fa-palette"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Thermostat Dial Widget -->
+                        <div class="device-detail-card glass-panel" data-room="living">
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-thermostat-icon-box">
+                                    <i class="fa-solid fa-snowflake"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>Smart Climate Control</h3>
+                                    <span class="device-loc">Living Room</span>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" checked id="widget-thermostat-toggle">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+
+                            <div class="device-controls-area text-center" id="widget-thermostat-controls">
+                                <div class="thermostat-dial-container">
+                                    <!-- Circular Slider SVG representation -->
+                                    <svg class="thermostat-svg" viewBox="0 0 200 200">
+                                        <defs>
+                                            <linearGradient id="thermo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stop-color="#00f2fe" />
+                                                <stop offset="100%" stop-color="#4facfe" />
+                                            </linearGradient>
+                                        </defs>
+                                        <!-- Background dial path track -->
+                                        <circle class="dial-bg" cx="100" cy="100" r="80" stroke-width="10" />
+                                        <!-- Active dial value track -->
+                                        <circle class="dial-progress" id="dial-value-ring" cx="100" cy="100" r="80" stroke-width="10" stroke-dasharray="502" stroke-dashoffset="150" />
+                                        <!-- Interactive knob grab element -->
+                                        <circle class="dial-knob" id="dial-rotator-knob" cx="100" cy="20" r="12" />
+                                    </svg>
+                                    <div class="thermo-digital-display">
+                                        <span class="thermo-current-label">Cooling</span>
+                                        <span class="thermo-temp-display" id="thermo-display-temp">21°C</span>
+                                        <span class="thermo-ambient-label">Ambient: <span id="thermo-ambient-val">22.4°C</span></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="climate-mode-selector">
+                                    <button class="mode-btn active" data-mode="cool"><i class="fa-solid fa-snowflake"></i> Cool</button>
+                                    <button class="mode-btn" data-mode="heat"><i class="fa-solid fa-fire"></i> Heat</button>
+                                    <button class="mode-btn" data-mode="eco"><i class="fa-solid fa-leaf"></i> Eco</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Secure Slide-to-Unlock Smart Lock Widget -->
+                        <div class="device-detail-card glass-panel" data-room="kitchen">
+                            <div class="device-card-header">
+                                <div class="device-icon-box active-secure" id="widget-lock-icon-box">
+                                    <i class="fa-solid fa-lock"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>Front Door Lock</h3>
+                                    <span class="device-loc">Main Entryway</span>
+                                </div>
+                            </div>
+
+                            <div class="device-controls-area">
+                                <div class="lock-status-display text-center">
+                                    <div class="lock-shield-wrapper" id="lock-shield-indicator">
+                                        <div class="shield-halo"></div>
+                                        <i class="fa-solid fa-shield-halved secure-icon"></i>
+                                    </div>
+                                    <h4 class="lock-state-text" id="lock-status-label">FRONT DOOR SECURED</h4>
+                                    <p class="sub-label">Battery Level: 92% • Locked by Sarah</p>
+                                </div>
+
+                                <!-- Slide to unlock slider track element -->
+                                <div class="slide-unlock-container" id="slide-to-unlock-track">
+                                    <div class="slide-button" id="slide-to-unlock-btn">
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </div>
+                                    <span class="slide-text" id="slide-to-unlock-text">SLIDE TO UNLOCK</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Premium Custom Audio Player Widget -->
+                        <div class="device-detail-card glass-panel" data-room="living">
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-music-icon-box">
+                                    <i class="fa-solid fa-music"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>Entertainment Node</h3>
+                                    <span class="device-loc">Living Room Speaker</span>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" checked id="widget-music-toggle">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+
+                            <div class="device-controls-area" id="widget-music-controls">
+                                <div class="music-player-layout">
+                                    <!-- Animated Vinyl Album -->
+                                    <div class="vinyl-disc-container">
+                                        <div class="vinyl-disc" id="rotating-vinyl">
+                                            <div class="vinyl-label-center"></div>
+                                        </div>
+                                        <div class="vinyl-tonearm" id="vinyl-tonearm"></div>
+                                    </div>
+                                    <div class="music-info-meta">
+                                        <h4 class="track-title" id="current-track-name">Midnight City</h4>
+                                        <span class="track-artist" id="current-track-artist">M83</span>
+                                        <span class="music-source"><i class="fa-brands fa-spotify"></i> Spotify Connect</span>
+                                    </div>
+                                </div>
+
+                                <div class="media-timeline">
+                                    <span class="time-lbl" id="track-time-elapsed">0:00</span>
+                                    <div class="timeline-bar-wrapper">
+                                        <input type="range" min="0" max="100" value="0" class="timeline-slider" id="music-timeline-progress">
+                                    </div>
+                                    <span class="time-lbl" id="track-time-total">4:04</span>
+                                </div>
+
+                                <div class="media-player-actions">
+                                    <button class="action-btn-circle" id="btn-track-prev"><i class="fa-solid fa-backward-step"></i></button>
+                                    <button class="action-btn-circle btn-play-pause" id="btn-track-play"><i class="fa-solid fa-play"></i></button>
+                                    <button class="action-btn-circle" id="btn-track-next"><i class="fa-solid fa-forward-step"></i></button>
+                                </div>
+
+                                <div class="media-volume-adjust">
+                                    <i class="fa-solid fa-volume-low"></i>
+                                    <input type="range" min="0" max="100" value="50" class="gradient-slider" id="widget-music-volume">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Backyard Floodlight & Garden Motion Sensor -->
+                        <div class="device-detail-card glass-panel" data-room="backyard">
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-floodlight-icon-box">
+                                    <i class="fa-solid fa-lightbulb"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>Backyard Floodlights</h3>
+                                    <span class="device-loc">Backyard Patio</span>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" id="widget-floodlight-toggle">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+
+                            <div class="device-controls-area" id="widget-floodlight-controls">
+                                <div class="control-group">
+                                    <div class="control-label">
+                                        <span>Dusk Threshold Sensor</span>
+                                        <span id="light-threshold-val">Auto-Active</span>
+                                    </div>
+                                    <p class="sub-label">Turns on floodlight automatically if motion is detected after sunset.</p>
+                                </div>
+
+                                <div class="sensor-readout-strip glass-panel">
+                                    <div class="readout-box">
+                                        <span class="readout-lbl">Lux Meter</span>
+                                        <span class="readout-val" id="sensor-lux">120 lx</span>
+                                    </div>
+                                    <div class="readout-box">
+                                        <span class="readout-lbl">Motion Alert</span>
+                                        <span class="readout-val text-neon-teal" id="sensor-motion-status">Secure</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 1. Smart Blinds Widget (Bedroom) -->
+                        <div class="device-detail-card glass-panel" data-room="bedroom">
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-blinds-icon-box">
+                                    <i class="fa-solid fa-person-shelter"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>Smart Window Blinds</h3>
+                                    <span class="device-loc">Bedroom</span>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" checked id="widget-blinds-toggle">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+
+                            <div class="device-controls-area" id="widget-blinds-controls">
+                                <div class="blinds-visual-container">
+                                    <svg class="blinds-svg" viewBox="0 0 100 80" width="100%" height="80">
+                                        <rect x="5" y="5" width="90" height="70" rx="3" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                                        <g id="blinds-slats-group">
+                                            <line x1="10" y1="12" x2="90" y2="12" stroke="rgba(0, 242, 254, 0.7)" stroke-width="2"/>
+                                            <line x1="10" y1="20" x2="90" y2="20" stroke="rgba(0, 242, 254, 0.7)" stroke-width="2"/>
+                                            <line x1="10" y1="28" x2="90" y2="28" stroke="rgba(0, 242, 254, 0.7)" stroke-width="2"/>
+                                            <line x1="10" y1="36" x2="90" y2="36" stroke="rgba(0, 242, 254, 0.7)" stroke-width="2"/>
+                                            <line x1="10" y1="44" x2="90" y2="44" stroke="rgba(0, 242, 254, 0.7)" stroke-width="2"/>
+                                            <line x1="10" y1="52" x2="90" y2="52" stroke="rgba(0, 242, 254, 0.7)" stroke-width="2"/>
+                                            <line x1="10" y1="60" x2="90" y2="60" stroke="rgba(0, 242, 254, 0.7)" stroke-width="2"/>
+                                            <line x1="10" y1="68" x2="90" y2="68" stroke="rgba(0, 242, 254, 0.7)" stroke-width="2"/>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="control-group">
+                                    <div class="control-label">
+                                        <span>Position Open</span>
+                                        <span id="blinds-pos-val">60%</span>
+                                    </div>
+                                    <div class="slider-wrapper">
+                                        <i class="fa-solid fa-circle-chevron-down slider-icon-min"></i>
+                                        <input type="range" min="0" max="100" value="60" class="gradient-slider" id="widget-blinds-position">
+                                        <i class="fa-solid fa-circle-chevron-up slider-icon-max"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Sleep/Wake Ambient Lamp (Bedroom) -->
+                        <div class="device-detail-card glass-panel" data-room="bedroom">
+                            <div class="card-glow-element" id="lamp-glow-color"></div>
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-lamp-icon-box">
+                                    <i class="fa-solid fa-bed"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>Sleep Ambient Lamp</h3>
+                                    <span class="device-loc">Bedroom Bedside</span>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" checked id="widget-lamp-toggle">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+
+                            <div class="device-controls-area" id="widget-lamp-controls">
+                                <div class="control-group">
+                                    <div class="control-label">
+                                        <span>Brightness</span>
+                                        <span id="lamp-bright-val">40%</span>
+                                    </div>
+                                    <div class="slider-wrapper">
+                                        <i class="fa-regular fa-moon slider-icon-min"></i>
+                                        <input type="range" min="10" max="100" value="40" class="gradient-slider" id="widget-lamp-brightness">
+                                        <i class="fa-solid fa-sun slider-icon-max"></i>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Scene Color</span>
+                                    <div class="color-palette-presets">
+                                        <button class="color-dot color-warm active" data-color="#ffb366" title="Soft Gold"></button>
+                                        <button class="color-dot color-purple" data-color="#a18cd1" title="Rest Amethyst"></button>
+                                        <button class="color-dot color-coral" data-color="#ff9a9e" title="Sunset Coral"></button>
+                                        <button class="color-dot color-teal" data-color="#00f2fe" title="Night Cyan"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Bedroom Air Purifier Widget -->
+                        <div class="device-detail-card glass-panel" data-room="bedroom">
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-purifier-icon-box">
+                                    <i class="fa-solid fa-wind"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>Bedroom Air Purifier</h3>
+                                    <span class="device-loc">Bedroom</span>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" checked id="widget-purifier-toggle">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+
+                            <div class="device-controls-area" id="widget-purifier-controls">
+                                <div class="sensor-readout-strip glass-panel">
+                                    <div class="readout-box">
+                                        <span class="readout-lbl">Air Quality</span>
+                                        <span class="readout-val text-neon-teal" id="purifier-aqi-status">EXCELLENT</span>
+                                    </div>
+                                    <div class="readout-box">
+                                        <span class="readout-lbl">PM2.5 Index</span>
+                                        <span class="readout-val" id="purifier-pm25-val">12 µg/m³</span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Purifier Fan Speed</span>
+                                    <div class="climate-mode-selector fan-mode-selector">
+                                        <button class="mode-btn active" data-fan="auto">Auto</button>
+                                        <button class="mode-btn" data-fan="low">Quiet</button>
+                                        <button class="mode-btn" data-fan="med">Med</button>
+                                        <button class="mode-btn" data-fan="high">High</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Smart Coffee Machine Widget (Kitchen) -->
+                        <div class="device-detail-card glass-panel" data-room="kitchen">
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-coffee-icon-box">
+                                    <i class="fa-solid fa-mug-hot"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>AeroPress Coffee Maker</h3>
+                                    <span class="device-loc">Kitchen Counter</span>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" checked id="widget-coffee-toggle">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+
+                            <div class="device-controls-area" id="widget-coffee-controls">
+                                <div class="coffee-brew-layout">
+                                    <div class="control-group" style="flex-grow: 1;">
+                                        <span class="control-label">Select Recipe</span>
+                                        <select class="builder-select select-coffee-recipe" id="coffee-recipe-select" style="width: 100%;">
+                                            <option value="espresso">Double Espresso</option>
+                                            <option value="latte">Caffè Latte</option>
+                                            <option value="americano" selected>Americano</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-primary-glow btn-sm" id="btn-coffee-brew" style="margin-top: 20px;">Brew</button>
+                                </div>
+
+                                <div class="brew-progress-bar-container" id="brew-progress-wrapper" style="display: none; margin-top: 10px;">
+                                    <div class="control-label" style="margin-bottom: 5px;">
+                                        <span id="brew-status-text">Brewing Americano...</span>
+                                        <span id="brew-percent-text">0%</span>
+                                    </div>
+                                    <div class="brew-progress-track">
+                                        <div class="brew-progress-fill" id="brew-progress-fill-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Smart Refrigerator Widget (Kitchen) -->
+                        <div class="device-detail-card glass-panel" data-room="kitchen">
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-fridge-icon-box">
+                                    <i class="fa-solid fa-kitchen-set"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>AeroTemp Fridge Node</h3>
+                                    <span class="device-loc">Kitchen</span>
+                                </div>
+                            </div>
+
+                            <div class="device-controls-area">
+                                <div class="sensor-readout-strip glass-panel">
+                                    <div class="readout-box">
+                                        <span class="readout-lbl">Fridge Temp</span>
+                                        <span class="readout-val" id="fridge-temp-val">3.5°C</span>
+                                    </div>
+                                    <div class="readout-box">
+                                        <span class="readout-lbl">Freezer Temp</span>
+                                        <span class="readout-val" id="freezer-temp-val">-18.0°C</span>
+                                    </div>
+                                </div>
+
+                                <div class="fridge-shopping-list">
+                                    <span class="control-label" style="margin-bottom: 5px; display: block;">Refrigerator Tracker</span>
+                                    <div class="shopping-input-row">
+                                        <input type="text" class="builder-input" id="shopping-item-input" placeholder="Add item..." style="flex-grow: 1; min-width: 0; padding: 8px 10px;">
+                                        <button class="btn-primary-glow btn-sm" id="btn-add-shopping-item">+</button>
+                                    </div>
+                                    <div class="shopping-list-items" id="shopping-list-container">
+                                        <div class="shopping-item">
+                                            <span>Fresh Milk</span>
+                                            <button class="btn-trash delete-shopping-btn" data-item="Fresh Milk">&times;</button>
+                                        </div>
+                                        <div class="shopping-item">
+                                            <span>Avocados</span>
+                                            <button class="btn-trash delete-shopping-btn" data-item="Avocados">&times;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Smart Sprinkler Widget (Backyard) -->
+                        <div class="device-detail-card glass-panel" data-room="backyard">
+                            <div class="device-card-header">
+                                <div class="device-icon-box active" id="widget-sprinkler-icon-box">
+                                    <i class="fa-solid fa-faucet-drip"></i>
+                                </div>
+                                <div class="device-meta">
+                                    <h3>Garden Sprinklers</h3>
+                                    <span class="device-loc">Backyard Lawn</span>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" id="widget-sprinkler-toggle">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+
+                            <div class="device-controls-area" id="widget-sprinkler-controls">
+                                <div class="sensor-readout-strip glass-panel">
+                                    <div class="readout-box">
+                                        <span class="readout-lbl">Soil Moisture</span>
+                                        <span class="readout-val" id="sprinkler-moisture-val">34%</span>
+                                    </div>
+                                    <div class="readout-box">
+                                        <span class="readout-lbl">System Status</span>
+                                        <span class="readout-val text-neon-teal" id="sprinkler-status-lbl">STANDBY</span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <p class="sub-label">Sprinkler zone turns on automatically if moisture falls below 30%.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 3. VISUAL AUTOMATION FLOWS -->
+                <section id="automations-section" class="route-panel">
+                    <div class="layout-split">
+                        <!-- Automation Flow Creator Panel -->
+                        <div class="split-column glass-panel">
+                            <div class="card-header border-bottom">
+                                <h2><i class="fa-solid fa-diagram-project text-neon-purple"></i> Smart Logic Builder</h2>
+                                <p class="sub-label">Create automatic tasks based on real-time device signals</p>
+                            </div>
+
+                            <div class="automation-builder-body">
+                                <!-- Step 1: Trigger Selection -->
+                                <div class="step-card">
+                                    <div class="step-badge">1</div>
+                                    <div class="step-content">
+                                        <h3>When Trigger Event Fires (IF)</h3>
+                                        <div class="builder-row">
+                                            <select class="builder-select" id="automation-trigger-device">
+                                                <option value="" disabled selected>Select Trigger Device</option>
+                                                <option value="temp-sensor">Living Thermostat Temp</option>
+                                                <option value="door-lock">Front Door Lock State</option>
+                                                <option value="motion-sensor">Backyard Motion Sensor</option>
+                                                <option value="time-event">Time of Day Event</option>
+                                            </select>
+                                            
+                                            <select class="builder-select" id="automation-trigger-condition">
+                                                <option value="" disabled selected>Condition</option>
+                                                <option value="gt">Greater Than (&gt;)</option>
+                                                <option value="lt">Less Than (&lt;)</option>
+                                                <option value="eq">Equals to (==)</option>
+                                                <option value="ne">Not equal to (!=)</option>
+                                            </select>
+
+                                            <input type="text" class="builder-input" id="automation-trigger-value" placeholder="e.g. 24°C, Unlocked">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2: Target Action -->
+                                <div class="step-card">
+                                    <div class="step-badge">2</div>
+                                    <div class="step-content">
+                                        <h3>Perform Action (THEN)</h3>
+                                        <div class="builder-row">
+                                            <select class="builder-select" id="automation-action-device">
+                                                <option value="" disabled selected>Select Target Appliance</option>
+                                                <option value="living-light">Living Room Light</option>
+                                                <option value="living-ac">Living Room Thermostat</option>
+                                                <option value="front-lock">Front Door Lock</option>
+                                                <option value="media-sound">Smart Speaker Node</option>
+                                                <option value="patio-flood">Patio Floodlights</option>
+                                            </select>
+                                            
+                                            <select class="builder-select" id="automation-action-state">
+                                                <option value="" disabled selected>Select Action State</option>
+                                                <option value="turn-on">Turn Appliance ON</option>
+                                                <option value="turn-off">Turn Appliance OFF</option>
+                                                <option value="dim-50">Dim light to 50%</option>
+                                                <option value="set-cool">Set Thermostat Cool (20°C)</option>
+                                                <option value="lock">Lock Door</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="action-footer text-right">
+                                    <button class="btn-primary-glow" id="btn-save-automation">
+                                        <i class="fa-solid fa-plus"></i> Compile Automation Rule
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Rules List -->
+                        <div class="split-column glass-panel">
+                            <div class="card-header border-bottom">
+                                <h2>Active Ecosystem Rules</h2>
+                                <p class="sub-label">Toggles rules directly linked into background simulation</p>
+                            </div>
+                            <div class="rules-list-container" id="automation-rules-list">
+                                <!-- Dynamic Rules will populate here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. SECURITY HUB VIEW -->
+                <section id="security-section" class="route-panel">
+                    <div class="layout-split">
+                        <!-- Camera Monitoring Center -->
+                        <div class="split-column glass-panel wide-split-column">
+                            <div class="card-header border-bottom">
+                                <h2><i class="fa-solid fa-video text-neon-pink"></i> Live Camera Monitor</h2>
+                                <div class="cam-selection-pills">
+                                    <button class="cam-pill active" data-cam="cam-driveway">CAM_01 Driveway</button>
+                                    <button class="cam-pill" data-cam="cam-backyard">CAM_02 Patio</button>
+                                    <button class="cam-pill" data-cam="cam-hallway">CAM_03 Living Room</button>
+                                </div>
+                            </div>
+
+                            <div class="video-monitor-body">
+                                <div class="main-cam-monitor">
+                                    <canvas id="largeCameraFeed" class="cam-canvas-large"></canvas>
+                                    <div class="cam-interface-overlays">
+                                        <span class="large-cam-title" id="large-cam-title">CAM_01 // DRIVEWAY</span>
+                                        <span class="large-cam-time" id="large-cam-time">Monday, June 1, 2026 12:00:00 PM</span>
+                                        <span class="cam-bitrate"><i class="fa-solid fa-wifi"></i> 4.8 Mbps • 4K HDR</span>
+                                        <div class="rec-icon"><span class="pulse red-pulse"></span>REC</div>
+                                    </div>
+                                </div>
+                                <div class="cam-controls-row">
+                                    <button class="btn-sec btn-sm" id="btn-cam-ptz-left"><i class="fa-solid fa-chevron-left"></i> Pan Left</button>
+                                    <button class="btn-sec btn-sm" id="btn-cam-ptz-right"><i class="fa-solid fa-chevron-right"></i> Pan Right</button>
+                                    <button class="btn-sec btn-sm" id="btn-cam-screenshot"><i class="fa-solid fa-camera"></i> Snapshot</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Motion Alerts Log -->
+                        <div class="split-column glass-panel">
+                            <div class="card-header border-bottom">
+                                <h2>Security Log Book</h2>
+                                <p class="sub-label">System detection alerts & operations</p>
+                            </div>
+                            <div class="security-log-container" id="security-log-list">
+                                <div class="log-entry log-success">
+                                    <span class="log-time">12:00 PM</span>
+                                    <span class="log-msg">Lock Status: Front Door securely locked</span>
+                                </div>
+                                <div class="log-entry log-info">
+                                    <span class="log-time">11:45 AM</span>
+                                    <span class="log-msg">Scene Trigger: Arrive Home activated by Sarah</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. ANALYTICS VIEW -->
+                <section id="analytics-section" class="route-panel">
+                    <div class="analytics-header-strip stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon-container bg-cyan"><i class="fa-solid fa-plug"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-lbl">Today's Consumption</span>
+                                <span class="stat-val" id="analytics-total-power">14.8 kWh</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-container bg-purple"><i class="fa-solid fa-dollar-sign"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-lbl">Estimated Cost</span>
+                                <span class="stat-val" id="analytics-cost">$2.22</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-container bg-pink"><i class="fa-solid fa-cloud"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-lbl">Carbon Footprint</span>
+                                <span class="stat-val" id="analytics-carbon">4.2 kg CO₂</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layout-split">
+                        <!-- Power graph over time -->
+                        <div class="split-column glass-panel wide-split-column">
+                            <div class="card-header border-bottom">
+                                <h2>Power Supply Grid Analytics</h2>
+                                <span class="card-sub-header">Hourly energy consumption profile</span>
+                            </div>
+                            <div class="chart-container-large">
+                                <canvas id="largeEnergyAnalyticsChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Device appliance splits -->
+                        <div class="split-column glass-panel">
+                            <div class="card-header border-bottom">
+                                <h2>Appliance Grid Split</h2>
+                                <span class="card-sub-header">Percentage load by system node</span>
+                            </div>
+                            <div class="chart-container-large pie-box">
+                                <canvas id="applianceDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. SETTINGS VIEW -->
+                <section id="settings-section" class="route-panel">
+                    <div class="glass-panel settings-card">
+                        <div class="card-header border-bottom">
+                            <h2>Aetheria Dashboard Control Settings</h2>
+                            <p class="sub-label">Fine-tune system variables, alerts, and debug active features</p>
+                        </div>
+                        
+                        <div class="settings-body">
+                            <!-- Toggle Real-time simulations -->
+                            <div class="setting-row">
+                                <div class="setting-details">
+                                    <h4>Dynamic Simulation Engine</h4>
+                                    <p class="sub-label">Enables random ambient temperature shifts, robotic vacuum movement, and motion triggers.</p>
+                                </div>
+                                <label class="switch-slide">
+                                    <input type="checkbox" checked id="setting-sim-engine">
+                                    <span class="switch-slider-round"></span>
+                                </label>
+                            </div>
+
+                            <!-- Simulation tick speed -->
+                            <div class="setting-row">
+                                <div class="setting-details">
+                                    <h4>Simulation Tick Update Rate</h4>
+                                    <p class="sub-label">Control how quickly mock sensors update background telemetry metrics.</p>
+                                </div>
+                                <select class="builder-select" id="setting-sim-speed">
+                                    <option value="1000">Fast (1s intervals)</option>
+                                    <option value="2000" selected>Normal (2s intervals)</option>
+                                    <option value="5000">Slow (5s intervals)</option>
+                                </select>
+                            </div>
+
+                            <!-- Alert Severity Threshold -->
+                            <div class="setting-row">
+                                <div class="setting-details">
+                                    <h4>Motion Alert Sensitivities</h4>
+                                    <p class="sub-label">Set event logging threshold filters for motion sensors.</p>
+                                </div>
+                                <select class="builder-select" id="setting-alerts-severity">
+                                    <option value="all">Log All Motions</option>
+                                    <option value="critical" selected>Log Large Alerts Only</option>
+                                </select>
+                            </div>
+
+                            <!-- Reset Dashboard -->
+                            <div class="setting-row border-none">
+                                <div class="setting-details">
+                                    <h4>Factory Ecosystem Reset</h4>
+                                    <p class="sub-label text-neon-gold">Reverts all custom light settings, deleted notifications, and resets customized automations rules.</p>
+                                </div>
+                                <button class="btn-sec text-neon-pink border-pink" id="btn-factory-reset">Reset Node State</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Active Toast Notification Hub -->
+    <div class="toast-hub" id="toast-notification-hub"></div>
+
+    <!-- Application Script -->
+    <script src="app.js?v=2.4"></script>
+</body>
+</html>
